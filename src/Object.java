@@ -1,0 +1,3 @@
+public enum Object {
+    WALL, LPIECE, IPIECE, TPIECE, SPIECE, ZPIECE, OPIECE, JPIECE;
+}
