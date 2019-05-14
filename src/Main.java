@@ -18,7 +18,7 @@ public class Main extends PApplet {
     }
 
     public void setup() {
-        strokeWeight(.2f);
+        strokeWeight(.1f);
         activePiece = newPiece();
     }
 
