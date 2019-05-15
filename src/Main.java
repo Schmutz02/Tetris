@@ -20,7 +20,7 @@ public class Main extends PApplet {
 
     public void setup() {
         activePiece = newPiece();
-        strokeWeight(.2f);
+        strokeWeight(.1f);
     }
 
     public void draw() {
