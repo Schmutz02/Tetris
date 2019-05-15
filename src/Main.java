@@ -46,13 +46,13 @@ public class Main extends PApplet {
     public void keyPressed(KeyEvent event) {
         switch (event.getKey()) {
             case 'q':
-                activePiece.rotate(Rotation.LEFT);
+                activePiece.rotate(Rotation.LEFT, ui);
                 break;
             case 'e':
-                activePiece.rotate(Rotation.RIGHT);
+                activePiece.rotate(Rotation.RIGHT, ui);
                 break;
             case 'f':
-                activePiece.rotate(Rotation.FLIP);
+                activePiece.rotate(Rotation.FLIP, ui);
                 break;
             case 'a':
                 activePiece.move(Action.LEFT, ui);

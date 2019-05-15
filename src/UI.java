@@ -32,7 +32,7 @@ public class UI {
                     parent.strokeWeight(.05f);
                     parent.noFill();
                 } else {
-                    parent.strokeWeight(.2f);
+                    parent.strokeWeight(.1f);
                     switch (matrix[i][j]) {
                         case WALL:
                             parent.fill(255);

@@ -11,17 +11,25 @@ public abstract class Tetromino {
         this.parent = parent;
     }
 
-    public void rotate(Rotation direction) {
+    public void rotate(Rotation direction, UI ui) {
         switch (direction) {
             case RIGHT:
                 matrix = rotateRight(matrix);
+                if (isColliding(ui.matrix))
+                    matrix = rotateLeft(matrix);
                 break;
             case LEFT:
                 matrix = rotateLeft(matrix);
+                if (isColliding(ui.matrix))
+                    matrix = rotateRight(matrix);
                 break;
             case FLIP:
                 matrix = rotateRight(matrix);
                 matrix = rotateRight(matrix);
+                if (isColliding(ui.matrix)) {
+                    matrix = rotateRight(matrix);
+                    matrix = rotateRight(matrix);
+                }
                 break;
         }
     }
