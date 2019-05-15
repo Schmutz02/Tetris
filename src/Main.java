@@ -6,7 +6,8 @@ public class Main extends PApplet {
     int unitsPerSecond = 1;
     UI ui = new UI(this, new PVector(1, 2));
     Tetromino activePiece;
-    public static double lockTimer = 2;
+    double currentLockTimeMS = 1000;
+    final double defaultLockTimeMS = 1000;
 
     public static void main(String[] args) {
         PApplet.main("Main");
@@ -18,8 +19,8 @@ public class Main extends PApplet {
     }
 
     public void setup() {
-        strokeWeight(.2f);
         activePiece = newPiece();
+        strokeWeight(.2f);
     }
 
     public void draw() {
@@ -34,16 +35,10 @@ public class Main extends PApplet {
             pullPiece();
         }
 
-        double now = System.nanoTime();
-        double deltaTime = (double)(now - this.frameRateLastNanos) / 1.0E9D;
-
-        if (activePiece.isColliding(ui.matrix))
-            lockTimer -= deltaTime;
-
-        if (lockTimer < 0) {
+        if (currentLockTimeMS < 0) {
             ui.merge(activePiece);
             activePiece = newPiece();
-            lockTimer = 2;
+            currentLockTimeMS = defaultLockTimeMS;
         }
     }
 
@@ -66,14 +61,27 @@ public class Main extends PApplet {
                 activePiece.move(Action.RIGHT, ui);
                 break;
             case 's':
-                activePiece.move(Action.DOWN, ui);
+                pullPiece();
                 frameCount = 0;
+                break;
+            case 'w':
+                while (!activePiece.isColliding(ui.matrix)) {
+                    activePiece.move(Action.DOWN, ui);
+                }
+                activePiece.position.y--;
+                ui.merge(activePiece);
+                activePiece = newPiece();
                 break;
         }
     }
 
     private void pullPiece() {
         activePiece.move(Action.DOWN, ui);
+        if (activePiece.isColliding(ui.matrix)) {
+            activePiece.position.y--;
+            ui.merge(activePiece);
+            activePiece = newPiece();
+        }
     }
 
     private Tetromino newPiece() {

@@ -40,8 +40,6 @@ public abstract class Tetromino {
                 break;
             case DOWN:
                 position.y++;
-                if (isColliding(ui.matrix))
-                    position.y--;
                 break;
         }
     }
