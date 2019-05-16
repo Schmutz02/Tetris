@@ -25,7 +25,7 @@ public class UI {
     }
 
     public void draw() {
-        int alpha = 100;
+        int alpha = 255;
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
                 if (matrix[i][j] == null) {
