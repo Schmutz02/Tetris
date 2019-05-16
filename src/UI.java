@@ -1,8 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.util.Arrays;
-
 public class UI {
     public final int BOARD_WIDTH = 12;
     public final int BOARD_HEIGHT = 22;
@@ -11,6 +9,7 @@ public class UI {
     public Object[][] matrix = new Object[BOARD_HEIGHT][BOARD_WIDTH];
     private int score = 0;
     private int level = 1;
+    private int lines = 0;
 
     public UI(PApplet parent, PVector position) {
         this.parent = parent;
@@ -64,12 +63,15 @@ public class UI {
             }
         }
 
-        parent.textSize(3);
-        parent.text(score, position.x + BOARD_WIDTH + 2, position.y + 2);
+        parent.textSize(2);
+        parent.text("Score: " + score, position.x + BOARD_WIDTH + 1, position.y + 2);
+
+        parent.text("Lines: " + lines, position.x + BOARD_WIDTH + 1, position.y + 6);
+
+        parent.text("Level: " + level, position.x + BOARD_WIDTH + 1, position.y + 10);
     }
 
     public void merge(Tetromino piece) {
-        int clearedRows = -2;
         for (int i = 0; i < piece.matrix.length; i++) {
             for (int j = 0; j < piece.matrix.length; j++) {
                 if (piece.matrix[i][j] != null) {
@@ -77,28 +79,7 @@ public class UI {
                 }
             }
         }
-
-        for (Object[] arr : matrix) {
-            int colsWithStuff = 0;
-            for (Object o : arr) {
-                if (o != null)
-                    colsWithStuff++;
-            }
-
-            if (colsWithStuff == BOARD_WIDTH) {
-                for (int j = 0; j < BOARD_WIDTH; j++) {
-                    if (arr[j] != Object.WALL)
-                        arr[j] = null;
-                }
-                clearedRows++;
-            }
-        }
-
-        if (doesNotContainPieces()) {
-            clearedRows++;
-        }
-
-        updateScore(clearedRows);
+        checkToClearLines();
     }
 
     private void updateScore(int rowsCleared) {
@@ -129,5 +110,43 @@ public class UI {
             }
         }
         return true;
+    }
+
+    private void checkToClearLines() {
+        int clearedRows = 0;
+
+        for (int i = 1; i < matrix.length - 1; i++) {
+            int colsWithStuff = 0;
+            for (Object o : matrix[i]) {
+                if (o != null)
+                    colsWithStuff++;
+            }
+
+            if (colsWithStuff == BOARD_WIDTH) {
+                clearLine(i);
+                clearedRows++;
+                lines++;
+                level = lines % 10 == 0 ? level+1 : level+0;
+            }
+        }
+
+        if (doesNotContainPieces()) {
+            clearedRows++;
+        }
+
+        updateScore(clearedRows);
+    }
+
+    private void clearLine(int line) {
+        for (int j = 0; j < BOARD_WIDTH; j++) {
+            if (matrix[line][j] != Object.WALL)
+                matrix[line][j] = null;
+        }
+
+        for (int y = line; y >= 2; y--) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
+                matrix[y][x] = matrix[y - 1][x];
+            }
+        }
     }
 }
