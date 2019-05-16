@@ -25,6 +25,7 @@ public class UI {
     }
 
     public void draw() {
+        int alpha = 100;
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
                 if (matrix[i][j] == null) {
@@ -37,25 +38,25 @@ public class UI {
                             parent.fill(255);
                             break;
                         case LPIECE:
-                            parent.fill(0, 0, 255);
+                            parent.fill(0, 0, 255, alpha);
                             break;
                         case IPIECE:
-                            parent.fill(0, 255, 255);
+                            parent.fill(0, 255, 255, alpha);
                             break;
                         case OPIECE:
-                            parent.fill(255, 255, 0);
+                            parent.fill(255, 255, 0, alpha);
                             break;
                         case TPIECE:
-                            parent.fill(255, 0, 255);
+                            parent.fill(255, 0, 255, alpha);
                             break;
                         case JPIECE:
-                            parent.fill(255, 165, 0);
+                            parent.fill(255, 165, 0, alpha);
                             break;
                         case SPIECE:
-                            parent.fill(0, 255, 0);
+                            parent.fill(0, 255, 0, alpha);
                             break;
                         case ZPIECE:
-                            parent.fill(255, 0, 0);
+                            parent.fill(255, 0, 0, alpha);
                             break;
                     }
                 }
@@ -126,7 +127,10 @@ public class UI {
                 clearLine(i);
                 clearedRows++;
                 lines++;
-                level = lines % 10 == 0 ? level+1 : level+0;
+                if (level % 10 == 0) {
+                    level++;
+                    Main.unitsPerSecond += .5;
+                }
             }
         }
 

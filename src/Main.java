@@ -3,7 +3,7 @@ import processing.core.PVector;
 import processing.event.KeyEvent;
 
 public class Main extends PApplet {
-    int unitsPerSecond = 1;
+    public static double unitsPerSecond = 1;
     UI ui = new UI(this, new PVector(1, 2));
     Tetromino activePiece;
     double currentLockTimeMS = 1000;
