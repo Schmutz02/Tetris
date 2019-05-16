@@ -2,7 +2,9 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 
-public class Main extends PApplet {
+import java.awt.*;
+
+public class Tetris extends PApplet {
     public static double unitsPerSecond = 1;
     UI ui = new UI(this, new PVector(1, 2));
     Tetromino activePiece;
@@ -10,11 +12,13 @@ public class Main extends PApplet {
     final double defaultLockTimeMS = 1000;
 
     public static void main(String[] args) {
-        PApplet.main("Main");
+        PApplet.main("Tetris");
     }
 
     public void settings() {
         frameRate = 60;
+//        Image icon = new Image
+//        frame.setIconImage();
         size(600, 600);
     }
 

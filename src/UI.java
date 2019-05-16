@@ -129,7 +129,7 @@ public class UI {
                 lines++;
                 if (level % 10 == 0) {
                     level++;
-                    Main.unitsPerSecond += .5;
+                    Tetris.unitsPerSecond += .5;
                 }
             }
         }
