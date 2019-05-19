@@ -1,6 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class UI {
     public final int BOARD_WIDTH = 12;
     public final int BOARD_HEIGHT = 22;
@@ -82,6 +84,43 @@ public class UI {
         checkToClearLines();
     }
 
+    public void computeGhost(Tetromino piece) {
+        Tetromino ghost = null;
+        try {
+            ghost = piece.getClass().getConstructor(PApplet.class, PVector.class).newInstance(parent, new PVector(piece.position.x, piece.position.y));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        int r = piece.rotation % 4;
+        r = r < 0 ? r+4 : r;
+
+        switch (r) {
+            case 1:
+                ghost.rotate(Rotation.RIGHT, this);
+                break;
+            case 2:
+                ghost.rotate(Rotation.FLIP, this);
+                break;
+            case 3:
+                ghost.rotate(Rotation.LEFT, this);
+                break;
+        }
+
+        while (!ghost.isColliding(matrix)) {
+            ghost.move(Action.DOWN, this);
+        }
+        ghost.position.y--;
+
+        ghost.render(100);
+    }
+
     private void updateScore(int rowsCleared) {
         switch (rowsCleared) {
             case 1:
@@ -126,7 +165,10 @@ public class UI {
                 clearLine(i);
                 clearedRows++;
                 lines++;
-                level = lines % 10 == 0 ? level+1 : level+0;
+                if (lines % 10 == 0) {
+                    level++;
+                    Main.unitsPerSecond += 0.5;
+                }
             }
         }
 

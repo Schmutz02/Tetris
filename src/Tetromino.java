@@ -5,6 +5,7 @@ public abstract class Tetromino {
     Object[][] matrix;
     PVector position;
     PApplet parent;
+    int rotation = 0;
 
     public Tetromino(PApplet parent, PVector position) {
         this.position = position;
@@ -52,7 +53,7 @@ public abstract class Tetromino {
         }
     }
 
-    public abstract void render();
+    public abstract void render(int alpha);
 
     private Object[][] rotateRight(Object[][] matrix) {
 
@@ -66,6 +67,7 @@ public abstract class Tetromino {
                 rotatedMatrix[j][ (totalColsOfRotatedMatrix-1)- i] = matrix[i][j];
             }
         }
+        rotation++;
         return rotatedMatrix;
     }
 
@@ -81,6 +83,7 @@ public abstract class Tetromino {
                 rotatedMatrix[(totalRowsOfRotatedMatrix-1)-j][i] = matrix[i][j];
             }
         }
+        rotation--;
         return rotatedMatrix;
     }
 
@@ -106,11 +109,11 @@ class LPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.LPIECE) {
-                    parent.fill(0, 0, 255);
+                    parent.fill(0, 0, 255, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -130,11 +133,11 @@ class IPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.IPIECE) {
-                    parent.fill(0, 255, 255);
+                    parent.fill(0, 255, 255, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -152,11 +155,11 @@ class OPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.OPIECE) {
-                    parent.fill(255, 255, 0);
+                    parent.fill(255, 255, 0, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -175,11 +178,11 @@ class TPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.TPIECE) {
-                    parent.fill(255, 0, 255);
+                    parent.fill(255, 0, 255, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -198,11 +201,11 @@ class JPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.JPIECE) {
-                    parent.fill(255, 165, 0);
+                    parent.fill(255, 165, 0, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -221,11 +224,11 @@ class SPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.SPIECE) {
-                    parent.fill(0, 255, 0);
+                    parent.fill(0, 255, 0, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }
@@ -244,11 +247,11 @@ class ZPiece extends Tetromino {
                 };
     }
 
-    public void render() {
+    public void render(int alpha) {
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix.length; j++) {
                 if (this.matrix[i][j] == Object.ZPIECE) {
-                    parent.fill(255, 0, 0);
+                    parent.fill(255, 0, 0, alpha);
                     parent.rect(position.x + j, position.y + i, 1, 1);
                 }
             }

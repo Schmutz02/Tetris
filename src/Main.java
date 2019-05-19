@@ -3,7 +3,7 @@ import processing.core.PVector;
 import processing.event.KeyEvent;
 
 public class Main extends PApplet {
-    int unitsPerSecond = 1;
+    public static float unitsPerSecond = 1;
     UI ui = new UI(this, new PVector(1, 2));
     Tetromino activePiece;
     double currentLockTimeMS = 1000;
@@ -21,6 +21,9 @@ public class Main extends PApplet {
     public void setup() {
         activePiece = newPiece();
         strokeWeight(.1f);
+
+        surface.setTitle("Tetris");
+        surface.setIcon(loadImage("Icon.PNG"));
     }
 
     public void draw() {
@@ -28,7 +31,8 @@ public class Main extends PApplet {
         scale(20);
 
         ui.draw();
-        activePiece.render();
+        activePiece.render(255);
+        ui.computeGhost(activePiece);
 
         if (frameCount >= frameRate / unitsPerSecond) {
             frameCount = 0;
