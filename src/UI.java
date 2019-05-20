@@ -27,51 +27,9 @@ public class UI {
     }
 
     public void draw() {
-        int alpha = 255;
-        for (int i = 0; i < BOARD_HEIGHT; i++) {
-            for (int j = 0; j < BOARD_WIDTH; j++) {
-                if (matrix[i][j] == null) {
-                    parent.strokeWeight(.05f);
-                    parent.noFill();
-                } else {
-                    parent.strokeWeight(.1f);
-                    switch (matrix[i][j]) {
-                        case WALL:
-                            parent.fill(255);
-                            break;
-                        case LPIECE:
-                            parent.fill(0, 0, 255, alpha);
-                            break;
-                        case IPIECE:
-                            parent.fill(0, 255, 255, alpha);
-                            break;
-                        case OPIECE:
-                            parent.fill(255, 255, 0, alpha);
-                            break;
-                        case TPIECE:
-                            parent.fill(255, 0, 255, alpha);
-                            break;
-                        case JPIECE:
-                            parent.fill(255, 165, 0, alpha);
-                            break;
-                        case SPIECE:
-                            parent.fill(0, 255, 0, alpha);
-                            break;
-                        case ZPIECE:
-                            parent.fill(255, 0, 0, alpha);
-                            break;
-                    }
-                }
-                parent.rect(j + position.x, i + position.y, 1, 1);
-            }
-        }
-
-        parent.textSize(2);
-        parent.text("Score: " + score, position.x + BOARD_WIDTH + 1, position.y + 2);
-
-        parent.text("Lines: " + lines, position.x + BOARD_WIDTH + 1, position.y + 6);
-
-        parent.text("Level: " + level, position.x + BOARD_WIDTH + 1, position.y + 10);
+        drawPlayField();
+        drawTextBox();
+        drawNextPiece();
     }
 
     public void merge(Tetromino piece) {
@@ -122,6 +80,66 @@ public class UI {
         ghost.render(100);
     }
 
+    private void drawNextPiece() {
+        parent.fill(0);
+        parent.stroke(255);
+        parent.rect(position.x + BOARD_WIDTH + 1, position.y + 11, 5, 5);
+        parent.stroke(0);
+        parent.fill(255);
+    }
+
+    private void drawTextBox() {
+        parent.fill(0);
+        parent.stroke(255);
+        parent.rect(position.x + BOARD_WIDTH + 1, position.y, 15, 10);
+        parent.stroke(0);
+        parent.fill(255);
+        parent.textSize(2);
+        parent.text("Score: " + score, position.x + BOARD_WIDTH + 2, position.y + 3);
+        parent.text("Lines: " + lines, position.x + BOARD_WIDTH + 2, position.y + 6);
+        parent.text("Level: " + level, position.x + BOARD_WIDTH + 2, position.y + 9);
+    }
+
+    private void drawPlayField() {
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                if (matrix[i][j] == null) {
+                    parent.strokeWeight(.05f);
+                    parent.noFill();
+                } else {
+                    parent.strokeWeight(.1f);
+                    switch (matrix[i][j]) {
+                        case WALL:
+                            parent.fill(255);
+                            break;
+                        case LPIECE:
+                            parent.fill(0, 0, 255);
+                            break;
+                        case IPIECE:
+                            parent.fill(0, 255, 255);
+                            break;
+                        case OPIECE:
+                            parent.fill(255, 255, 0);
+                            break;
+                        case TPIECE:
+                            parent.fill(255, 0, 255);
+                            break;
+                        case JPIECE:
+                            parent.fill(255, 165, 0);
+                            break;
+                        case SPIECE:
+                            parent.fill(0, 255, 0);
+                            break;
+                        case ZPIECE:
+                            parent.fill(255, 0, 0);
+                            break;
+                    }
+                }
+                parent.rect(j + position.x, i + position.y, 1, 1);
+            }
+        }
+    }
+
     private void updateScore(int rowsCleared) {
         switch (rowsCleared) {
             case 1:
@@ -168,7 +186,7 @@ public class UI {
                 lines++;
                 if (lines % 10 == 0) {
                     level++;
-                    Main.unitsPerSecond += 0.5;
+                    Tetris.unitsPerSecond += 0.5; //balance
                 }
             }
         }

@@ -2,5 +2,5 @@ public enum Rotation {
     LEFT, RIGHT, FLIP
 }
 enum Action {
-    LEFT, RIGHT, DOWN, SLAM
+    LEFT, RIGHT, DOWN
 }
