@@ -9,7 +9,7 @@ public class UI {
     public PVector position;
     private PApplet parent;
     public Object[][] matrix = new Object[BOARD_HEIGHT][BOARD_WIDTH];
-    private int score = 0;
+    public int score = 0;
     private int level = 1;
     private int lines = 0;
 
@@ -26,10 +26,18 @@ public class UI {
         }
     }
 
-    public void draw() {
-        drawPlayField();
-        drawTextBox();
-        drawNextPiece();
+    public void draw(boolean gameOver) {
+        if (!gameOver) {
+            drawPlayField();
+            drawTextBox();
+            drawNextPiece();
+        } else {
+            parent.background(0);
+            parent.textSize(2);
+            parent.fill(255);
+            parent.text("Game Over!", 10, 10);
+            parent.text("Score: " + score, 10, 13);
+        }
     }
 
     public void merge(Tetromino piece) {
@@ -83,7 +91,7 @@ public class UI {
     private void drawNextPiece() {
         parent.fill(0);
         parent.stroke(255);
-        parent.rect(position.x + BOARD_WIDTH + 1, position.y + 11, 5, 5);
+        parent.rect(position.x + BOARD_WIDTH + 1, position.y + 11, 6, 4);
         parent.stroke(0);
         parent.fill(255);
     }

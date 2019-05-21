@@ -2,14 +2,16 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 
-import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class Tetris extends PApplet {
     public static double unitsPerSecond = 1;
     UI ui = new UI(this, new PVector(1, 2));
     Tetromino upComingPiece, activePiece;
+    boolean gameOver = false;
     double currentLockTimeMS = 1000;
     final double defaultLockTimeMS = 1000;
+    int highScore = 0;
 
     public static void main(String[] args) {
         PApplet.main("Tetris");
@@ -21,8 +23,8 @@ public class Tetris extends PApplet {
     }
 
     public void setup() {
-        activePiece = newPiece();
-        upComingPiece = newPiece();
+        activePiece = newPiece(false);
+        upComingPiece = newPiece(true);
         strokeWeight(.1f);
 
         surface.setTitle("Tetris");
@@ -33,10 +35,13 @@ public class Tetris extends PApplet {
         background(100);
         scale(20);
 
-        ui.draw();
-        upComingPiece.render(255);
-        activePiece.render(255);
-        ui.computeGhost(activePiece);
+
+        ui.draw(gameOver);
+        if (!gameOver) {
+            upComingPiece.render(255);
+            activePiece.render(255);
+            ui.computeGhost(activePiece);
+        }
 
         if (frameCount >= frameRate / unitsPerSecond) {
             frameCount = 0;
@@ -45,8 +50,7 @@ public class Tetris extends PApplet {
 
         if (currentLockTimeMS < 0) {
             ui.merge(activePiece);
-            activePiece = upComingPiece;
-            upComingPiece = newPiece();
+            changePieces();
             currentLockTimeMS = defaultLockTimeMS;
         }
     }
@@ -79,8 +83,7 @@ public class Tetris extends PApplet {
                 }
                 activePiece.position.y--;
                 ui.merge(activePiece);
-                activePiece = upComingPiece;
-                upComingPiece = newPiece();
+                changePieces();
                 break;
         }
     }
@@ -90,12 +93,11 @@ public class Tetris extends PApplet {
         if (activePiece.isColliding(ui.matrix)) {
             activePiece.position.y--;
             ui.merge(activePiece);
-            activePiece = upComingPiece;
-            upComingPiece = newPiece();
+            changePieces();
         }
     }
 
-    private Tetromino newPiece() {
+    private Tetromino newPiece(boolean isUpcoming) {
         Tetromino piece = null;
         switch ((int)(Math.random() * 7)) {
             case 0:
@@ -120,6 +122,27 @@ public class Tetris extends PApplet {
                 piece = new ZPiece(this, new PVector(ui.position.x + ui.BOARD_WIDTH / 2 - 1, ui.position.y + 1));
                 break;
         }
+        if (piece.isColliding(ui.matrix)) {
+            gameOver = true;
+        }
+        if (isUpcoming) {
+            piece.position = new PVector(15, 14);
+        }
         return piece;
+    }
+
+    private void changePieces() {
+        try {
+            activePiece = upComingPiece.getClass().getConstructor(PApplet.class, PVector.class).newInstance(this, new PVector(ui.position.x + ui.BOARD_WIDTH / 2 - 1, ui.position.y + 1));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        upComingPiece = newPiece(true);
     }
 }
