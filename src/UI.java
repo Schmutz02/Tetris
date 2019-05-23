@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,8 +36,12 @@ public class UI {
             parent.background(0);
             parent.textSize(2);
             parent.fill(255);
-            parent.text("Game Over!", 10, 10);
-            parent.text("Score: " + score, 10, 13);
+            parent.textAlign(PConstants.CENTER);
+            int x = (parent.width / 2) / 20;
+            parent.text("Game Over!", x, 10);
+            parent.text("Score: " + score, x, 13);
+            parent.text("High score: " + Tetris.highScore, x, 16);
+            parent.textAlign(PConstants.LEFT);
         }
     }
 
@@ -116,31 +121,35 @@ public class UI {
                     parent.noFill();
                 } else {
                     parent.strokeWeight(.1f);
-                    switch (matrix[i][j]) {
-                        case WALL:
-                            parent.fill(255);
-                            break;
-                        case LPIECE:
-                            parent.fill(0, 0, 255);
-                            break;
-                        case IPIECE:
-                            parent.fill(0, 255, 255);
-                            break;
-                        case OPIECE:
-                            parent.fill(255, 255, 0);
-                            break;
-                        case TPIECE:
-                            parent.fill(255, 0, 255);
-                            break;
-                        case JPIECE:
-                            parent.fill(255, 165, 0);
-                            break;
-                        case SPIECE:
-                            parent.fill(0, 255, 0);
-                            break;
-                        case ZPIECE:
-                            parent.fill(255, 0, 0);
-                            break;
+                    if (!Tetris.epilepsy) {
+                        switch (matrix[i][j]) {
+                            case WALL:
+                                parent.fill(255);
+                                break;
+                            case LPIECE:
+                                parent.fill(0, 0, 255);
+                                break;
+                            case IPIECE:
+                                parent.fill(0, 255, 255);
+                                break;
+                            case OPIECE:
+                                parent.fill(255, 255, 0);
+                                break;
+                            case TPIECE:
+                                parent.fill(255, 0, 255);
+                                break;
+                            case JPIECE:
+                                parent.fill(255, 165, 0);
+                                break;
+                            case SPIECE:
+                                parent.fill(0, 255, 0);
+                                break;
+                            case ZPIECE:
+                                parent.fill(255, 0, 0);
+                                break;
+                        }
+                    } else {
+                        parent.fill((float)Math.random() * 256, (float)Math.random() * 256, (float)Math.random() * 256);
                     }
                 }
                 parent.rect(j + position.x, i + position.y, 1, 1);

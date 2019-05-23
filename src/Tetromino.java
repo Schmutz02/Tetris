@@ -1,6 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 public abstract class Tetromino {
     Object[][] matrix;
     PVector position;
@@ -88,11 +90,27 @@ public abstract class Tetromino {
     }
 
     public boolean isColliding(Object[][] other) {
+//        for (int i = 0; i < matrix.length; i++) {
+//            for (int j = 0; j < matrix.length; j++) {
+//                if (matrix[i][j] != null && other[i + (int)position.y - 2][j + (int)position.x - 1] != null)
+//                    return true;
+//            }
+//        }
+//        return false;
+
+        ArrayList<PVector> points = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                if (matrix[i][j] != null && other[i + (int)position.y - 2][j + (int)position.x - 1] != null)
-                    return true;
+                if (i + 1 > matrix.length && matrix[i + 1][j] != null)
+                    continue;
+
+                points.add(new PVector(i, j));
             }
+        }
+
+        for (PVector point : points) {
+            if (other[(int)point.y + 1 + (int)position.y][(int)point.x + (int)position.x] != null)
+                return true;
         }
         return false;
     }

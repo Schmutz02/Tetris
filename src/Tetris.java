@@ -2,6 +2,10 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 
 public class Tetris extends PApplet {
@@ -11,7 +15,8 @@ public class Tetris extends PApplet {
     boolean gameOver = false;
     double currentLockTimeMS = 1000;
     final double defaultLockTimeMS = 1000;
-    int highScore = 0;
+    public static int highScore = 0;
+    public static boolean epilepsy = false;
 
     public static void main(String[] args) {
         PApplet.main("Tetris");
@@ -23,6 +28,7 @@ public class Tetris extends PApplet {
     }
 
     public void setup() {
+        load();
         activePiece = newPiece(false);
         upComingPiece = newPiece(true);
         strokeWeight(.1f);
@@ -46,12 +52,6 @@ public class Tetris extends PApplet {
         if (frameCount >= frameRate / unitsPerSecond) {
             frameCount = 0;
             pullPiece();
-        }
-
-        if (currentLockTimeMS < 0) {
-            ui.merge(activePiece);
-            changePieces();
-            currentLockTimeMS = defaultLockTimeMS;
         }
     }
 
@@ -85,6 +85,14 @@ public class Tetris extends PApplet {
                 ui.merge(activePiece);
                 changePieces();
                 break;
+            case 'r':
+                gameOver = false;
+                activePiece = newPiece(false);
+                upComingPiece = newPiece(true);
+                ui = new UI(this, new PVector(1, 2));
+            case '`':
+                epilepsy = !epilepsy;
+                break;
         }
     }
 
@@ -92,8 +100,10 @@ public class Tetris extends PApplet {
         activePiece.move(Action.DOWN, ui);
         if (activePiece.isColliding(ui.matrix)) {
             activePiece.position.y--;
-            ui.merge(activePiece);
-            changePieces();
+            if (currentLockTimeMS < 0) {
+                ui.merge(activePiece);
+                changePieces();
+            }
         }
     }
 
@@ -124,6 +134,13 @@ public class Tetris extends PApplet {
         }
         if (piece.isColliding(ui.matrix)) {
             gameOver = true;
+            if (ui.score > highScore) {
+                PrintWriter writer = createWriter("Save.txt");
+                writer.println(ui.score);
+                writer.flush();
+                writer.close();
+            }
+
         }
         if (isUpcoming) {
             piece.position = new PVector(15, 14);
@@ -144,5 +161,20 @@ public class Tetris extends PApplet {
             e.printStackTrace();
         }
         upComingPiece = newPiece(true);
+    }
+
+    private void load() {
+        File saveFile = new File("Save.txt");
+        String line;
+        if (saveFile.exists()) {
+            BufferedReader reader = createReader("Save.txt");
+            try {
+                line = reader.readLine();
+                highScore = Integer.parseInt(line);
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
