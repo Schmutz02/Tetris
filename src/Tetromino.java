@@ -101,15 +101,18 @@ public abstract class Tetromino {
         ArrayList<PVector> points = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                if (i + 1 > matrix.length && matrix[i + 1][j] != null)
+                if (i + 1 >= matrix.length && matrix[i][j] != null) {
+                    points.add(new PVector(j, i + 1));
                     continue;
-
-                points.add(new PVector(i, j));
+                }
+                if (i + 1 < matrix.length && matrix[i][j] != null && matrix[i + 1][j] == null) {
+                    points.add(new PVector(j, i + 1));
+                }
             }
         }
 
         for (PVector point : points) {
-            if (other[(int)point.y + 1 + (int)position.y][(int)point.x + (int)position.x] != null)
+            if (other[(int)point.y + (int)position.y - 3][(int)point.x + (int)position.x - 1] != null)
                 return true;
         }
         return false;
@@ -121,7 +124,7 @@ class LPiece extends Tetromino {
         super(parent, position);
         this.matrix = new Object[][]
                 {
-                        {Object.LPIECE, null, null},
+                        {null, null, Object.LPIECE},
                         {Object.LPIECE, Object.LPIECE, Object.LPIECE},
                         {null, null, null}
                 };
@@ -213,7 +216,7 @@ class JPiece extends Tetromino {
         super(parent, position);
         this.matrix = new Object[][]
                 {
-                        {null, null, Object.JPIECE},
+                        {Object.JPIECE, null, null},
                         {Object.JPIECE, Object.JPIECE, Object.JPIECE},
                         {null ,null, null}
                 };

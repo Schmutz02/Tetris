@@ -17,6 +17,7 @@ public class Tetris extends PApplet {
     final double defaultLockTimeMS = 1000;
     public static int highScore = 0;
     public static boolean epilepsy = false;
+    private long now;
 
     public static void main(String[] args) {
         PApplet.main("Tetris");
@@ -41,6 +42,10 @@ public class Tetris extends PApplet {
         background(100);
         scale(20);
 
+        if (activePiece.isColliding(ui.matrix)) {
+            now = System.nanoTime();
+        }
+
 
         ui.draw(gameOver);
         if (!gameOver) {
@@ -52,6 +57,12 @@ public class Tetris extends PApplet {
         if (frameCount >= frameRate / unitsPerSecond) {
             frameCount = 0;
             pullPiece();
+        }
+
+        if (currentLockTimeMS < 0) {
+            ui.merge(activePiece);
+            changePieces();
+            currentLockTimeMS = defaultLockTimeMS;
         }
     }
 
@@ -100,10 +111,8 @@ public class Tetris extends PApplet {
         activePiece.move(Action.DOWN, ui);
         if (activePiece.isColliding(ui.matrix)) {
             activePiece.position.y--;
-            if (currentLockTimeMS < 0) {
                 ui.merge(activePiece);
                 changePieces();
-            }
         }
     }
 
